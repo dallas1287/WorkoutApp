@@ -1,0 +1,47 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:CustomTabata"
+             mc:Ignorable="d"
+             x:Class="CustomTabata.WorkoutBuilder">
+
+    <ContentPage.BindingContext>
+        <local:WorkoutBuilderVM/>
+    </ContentPage.BindingContext>
+    
+    <ContentPage.Content>
+        <Grid>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <Picker x:Name="typePicker" Grid.Row="0" Grid.Column="0" Grid.ColumnSpan="2"
+                    Title="Add a Workout Type"
+                    ItemsSource="{Binding WorkoutStrings}"
+                    SelectedItem="{Binding PickerSelectedItem}">
+            </Picker>
+
+            <CollectionView Grid.Row="1" Grid.ColumnSpan="2"
+                            BackgroundColor="Black"
+                            ItemsSource="{Binding WorkoutList}"
+                            SelectionMode="Single"
+                            SelectedItem="{Binding SelectedWorkout}"
+                            SelectionChangedCommand="{Binding ModifyWorkoutCommand}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Label Text="{Binding DisplayString}" FontSize="Title"/>
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </Grid>
+    </ContentPage.Content>
+</ContentPage>

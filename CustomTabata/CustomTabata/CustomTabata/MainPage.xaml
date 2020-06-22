@@ -1,0 +1,39 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local='clr-namespace:CustomTabata'
+             mc:Ignorable="d"
+             x:Class="CustomTabata.MainPage">
+
+    <ContentPage.BindingContext>
+        <local:MainPageViewModel/>
+    </ContentPage.BindingContext>
+
+    <Grid BackgroundColor="Black">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height=".25*"/>
+            <RowDefinition Height=".5*"/>
+            <RowDefinition Height=".25*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
+               VerticalTextAlignment="Center"
+               HorizontalTextAlignment="Center"
+               Text="{Binding StopwatchString}" BackgroundColor="Black" TextColor="Green" FontSize="48"/>
+        
+        <Button x:Name="startBtn" x:FieldModifier="public" Grid.Column="0" Grid.Row="2"  Command="{Binding StartCommand}" Text="Start"/>
+        <Button Grid.Column="1" Grid.Row="2" Command="{Binding ResetCommand}" Text="Reset"/>
+        
+        <Button Grid.Column="0" Grid.Row="4" Command="{Binding BuildWorkoutCommand}" Text="Build Workout"/>
+        <Button Grid.Column="1" Grid.Row="4" Command="{Binding LoadWorkoutCommand}" Text="Load Workout"/>
+    </Grid>
+
+</ContentPage>

@@ -1,0 +1,107 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://xamarin.com/schemas/2014/forms"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:d="http://xamarin.com/schemas/2014/forms/design"
+             xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+             xmlns:local="clr-namespace:CustomTabata"
+             mc:Ignorable="d"
+             x:Class="CustomTabata.WorkoutModifier">
+
+    <ContentPage.BindingContext>
+        <local:WorkoutModifierVM/>
+    </ContentPage.BindingContext>
+
+    <ContentPage.Content>
+        <StackLayout BackgroundColor="Black">
+
+            <Grid Grid.Row="0" Grid.ColumnSpan="3" HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Label Grid.Column="0" Grid.Row="0" Text="00" Margin=""
+                        FontSize="48" HorizontalOptions="End" VerticalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTapGestureRecognizerTapped"
+                                              NumberOfTapsRequired="1"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Grid.Column="1" Grid.Row="0" Text=":"
+                       HorizontalOptions="Fill" VerticalOptions="Fill" Margin="1"
+                       FontSize="48" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                <Label Grid.Column="2" Grid.Row="0" Text="00"
+                        FontSize="48" HorizontalOptions="Center">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTapGestureRecognizerTapped"
+                                              NumberOfTapsRequired="1"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                <Label Grid.Column="3" Grid.Row="0" Text=":" 
+                       FontSize="48" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
+                <Label Grid.Column="4" Grid.Row="0" Text="00" 
+                        FontSize="48" HorizontalOptions="Start">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTapGestureRecognizerTapped"
+                                              NumberOfTapsRequired="1"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </Grid>
+
+            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Expand" VerticalOptions="EndAndExpand">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Grid.Column ="0" Grid.Row="2"
+                        FontSize ="Large" Text="1"
+                        Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="1" Grid.Row="2"
+                        FontSize ="Large" Text="2"
+                         Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="2" Grid.Row="2"
+                        FontSize ="Large" Text="3"
+                        Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="0" Grid.Row="3"
+                        FontSize ="Large" Text="4"
+                        Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="1" Grid.Row="3"
+                        FontSize ="Large" Text="5"
+                        Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="2" Grid.Row="3"
+                        FontSize ="Large" Text="6"
+                        Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="0" Grid.Row="4"
+                        FontSize ="Large" Text="7"
+                        Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="1" Grid.Row="4"
+                        FontSize ="Large" Text="8"
+                        Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="2" Grid.Row="4"
+                        FontSize ="Large" Text="9"
+                        Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="0" Grid.Row="5"
+                        FontSize ="Large" Text="X"/>
+                <Button Grid.Column ="1" Grid.Row="5"
+                        FontSize ="Large" Text="0"
+                        Clicked="OnButtonClicked"/>
+                <Button Grid.Column ="2" Grid.Row="5"
+                        FontSize ="Large" Text="Add"/>
+            </Grid>
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
