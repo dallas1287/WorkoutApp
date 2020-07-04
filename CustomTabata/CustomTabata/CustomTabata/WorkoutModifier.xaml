@@ -7,54 +7,42 @@
              mc:Ignorable="d"
              x:Class="CustomTabata.WorkoutModifier">
 
-    <ContentPage.BindingContext>
-        <local:WorkoutModifierVM/>
-    </ContentPage.BindingContext>
-
     <ContentPage.Content>
         <StackLayout BackgroundColor="Black">
 
-            <Grid Grid.Row="0" Grid.ColumnSpan="3" HorizontalOptions="CenterAndExpand" VerticalOptions="EndAndExpand">
-                <Grid.RowDefinitions>
-                    <RowDefinition Height="*"/>
-                </Grid.RowDefinitions>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
+            <StackLayout x:Name="timerLayout" Orientation="Horizontal" Spacing="1" HorizontalOptions="Center">
+                <Label x:Name="hrsLabel" Grid.Column="0" Grid.Row="0" Text="{Binding Hours, Mode=TwoWay}" FontSize="72">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTapped" 
+                            Command="{Binding OnTimerTapped}" CommandParameter="{x:Reference hrsLabel}"
+                                              NumberOfTapsRequired="1"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                
+                <Label x:Name="colonLabel1" Grid.Column="1" Grid.Row="0" Text=":" 
+                       FontSize="72" HorizontalTextAlignment="Center"/>
+                
+                <Label x:Name="minsLabel" Grid.Column="2" Grid.Row="0" Text="{Binding Minutes, Mode=TwoWay}" FontSize="72">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTapped" 
+                            Command="{Binding OnTimerTapped}" CommandParameter="{x:Reference minsLabel}"
+                                              NumberOfTapsRequired="1"/>
+                    </Label.GestureRecognizers>
+                </Label>
+                
+                <Label x:Name="colonLabel2" Grid.Column="3" Grid.Row="0" Text=":" 
+                       FontSize="72" HorizontalTextAlignment="Center"/>
+                
+                <Label x:Name="secsLabel" Grid.Column="4" Grid.Row="0" Text="{Binding Seconds, Mode=TwoWay}" FontSize="72">
+                    <Label.GestureRecognizers>
+                        <TapGestureRecognizer Tapped="OnTapped"
+                            Command="{Binding OnTimerTapped}" CommandParameter="{x:Reference secsLabel}"
+                                              NumberOfTapsRequired="1"/>
+                    </Label.GestureRecognizers>
+                </Label>
+            </StackLayout>
 
-                <Label Grid.Column="0" Grid.Row="0" Text="00" Margin=""
-                        FontSize="48" HorizontalOptions="End" VerticalOptions="Center">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnTapGestureRecognizerTapped"
-                                              NumberOfTapsRequired="1"/>
-                    </Label.GestureRecognizers>
-                </Label>
-                <Label Grid.Column="1" Grid.Row="0" Text=":"
-                       HorizontalOptions="Fill" VerticalOptions="Fill" Margin="1"
-                       FontSize="48" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                <Label Grid.Column="2" Grid.Row="0" Text="00"
-                        FontSize="48" HorizontalOptions="Center">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnTapGestureRecognizerTapped"
-                                              NumberOfTapsRequired="1"/>
-                    </Label.GestureRecognizers>
-                </Label>
-                <Label Grid.Column="3" Grid.Row="0" Text=":" 
-                       FontSize="48" HorizontalTextAlignment="Center" VerticalTextAlignment="Center"/>
-                <Label Grid.Column="4" Grid.Row="0" Text="00" 
-                        FontSize="48" HorizontalOptions="Start">
-                    <Label.GestureRecognizers>
-                        <TapGestureRecognizer Tapped="OnTapGestureRecognizerTapped"
-                                              NumberOfTapsRequired="1"/>
-                    </Label.GestureRecognizers>
-                </Label>
-            </Grid>
-
-            <Grid Grid.Row="1" Grid.Column="0" Grid.ColumnSpan="3" HorizontalOptions="Expand" VerticalOptions="EndAndExpand">
+            <Grid x:Name="btnGrid" IsVisible="false">
                 <Grid.RowDefinitions>
                     <RowDefinition Height="*"/>
                     <RowDefinition Height="*"/>
@@ -69,36 +57,37 @@
 
                 <Button Grid.Column ="0" Grid.Row="2"
                         FontSize ="Large" Text="1"
-                        Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="1"/>
                 <Button Grid.Column ="1" Grid.Row="2"
                         FontSize ="Large" Text="2"
-                         Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="2"/>
                 <Button Grid.Column ="2" Grid.Row="2"
                         FontSize ="Large" Text="3"
-                        Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="3"/>
                 <Button Grid.Column ="0" Grid.Row="3"
                         FontSize ="Large" Text="4"
-                        Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="4"/>
                 <Button Grid.Column ="1" Grid.Row="3"
                         FontSize ="Large" Text="5"
-                        Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="5"/>
                 <Button Grid.Column ="2" Grid.Row="3"
                         FontSize ="Large" Text="6"
-                        Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="6"/>
                 <Button Grid.Column ="0" Grid.Row="4"
                         FontSize ="Large" Text="7"
-                        Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="7"/>
                 <Button Grid.Column ="1" Grid.Row="4"
                         FontSize ="Large" Text="8"
-                        Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="8"/>
                 <Button Grid.Column ="2" Grid.Row="4"
                         FontSize ="Large" Text="9"
-                        Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="9"/>
                 <Button Grid.Column ="0" Grid.Row="5"
-                        FontSize ="Large" Text="X"/>
+                        FontSize ="Large" Text="X"
+                        Command="{Binding OnNumberButton}" CommandParameter="X"/>
                 <Button Grid.Column ="1" Grid.Row="5"
                         FontSize ="Large" Text="0"
-                        Clicked="OnButtonClicked"/>
+                        Command="{Binding OnNumberButton}" CommandParameter="0"/>
                 <Button Grid.Column ="2" Grid.Row="5"
                         FontSize ="Large" Text="Add"/>
             </Grid>

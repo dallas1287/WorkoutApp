@@ -8,54 +8,35 @@ using System.Threading.Tasks;
 
 using Xamarin.Forms;
 using Xamarin.Forms.Xaml;
+using Xamarin.Essentials;
+using System.Dynamic;
 
 namespace CustomTabata
 {
     [XamlCompilation(XamlCompilationOptions.Compile)]
     public partial class WorkoutModifier : ContentPage
     {
-        public WorkoutModifier(WorkoutElement currElem)
+        public WorkoutModifier()
         {
             InitializeComponent();
-            CurrElem = currElem;
-            //modifierLabel.Text = CurrElem.DisplayValue;
-        }
-
-        void OnButtonClicked(object sender, EventArgs args)
-        {
-            if(CurrElem.IsValid())
-                HandleButtonUpdates((sender as Button).Text);
-        }
-
-        void HandleButtonUpdates(string text)
-        {
-            if (Int32.TryParse(text, out int newValue))
+            MessagingCenter.Subscribe<WorkoutBuilderVM, WorkoutElement>(this, "UpdateType", (sender, arg) =>
             {
-                if (CurrElem.IsTimeSpan())
-                {
-                    var currTS = (CurrElem as TimeSpanElement).ElemTimeSpan;
-                    var newHrs = currTS.Hours * 10 + currTS.Minutes / 10;
-                    var newMin = currTS.Minutes * 10 + currTS.Seconds / 10;
-                    var newSecs = currTS.Seconds % 10 * 10 + newValue;
-                    (CurrElem as TimeSpanElement).ElemTimeSpan = new TimeSpan(newHrs, newMin, newSecs);
-                    //modifierLabel.Text = (CurrElem as TimeSpanElement).ElemTimeSpan.ToString();
-
-                }
-                else if(CurrElem.IsCounter())
-                {
-                    (CurrElem as CountedElement).ElemValue *= 10;
-                    (CurrElem as CountedElement).ElemValue += newValue;
-                    //modifierLabel.Text = (CurrElem as CountedElement).ElemValue.ToString();
-                }
-            }
+                ShowLabels(arg.IsTimeSpan());
+            });
         }
 
-        void OnTapGestureRecognizerTapped(object sender, EventArgs args)
+        void ShowLabels(bool show)
         {
-            //TODO: handle popping up the keyboard 
-            var thing = sender;
+            colonLabel1.IsVisible = show;
+            colonLabel2.IsVisible = show;
+            hrsLabel.IsVisible = show;
+            secsLabel.IsVisible = show;
         }
-        WorkoutElement CurrElem { get; set; }
+
+        void OnTapped(object sender, EventArgs args)
+        {
+            btnGrid.IsVisible = true;
+        }
     }
 
     public class WorkoutModifierVM : INotifyPropertyChanged
@@ -65,8 +46,98 @@ namespace CustomTabata
         {
             PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
         }
-        public WorkoutModifierVM() { }
 
-        public string ModifierText { get; set; } = "00";
+
+        public WorkoutModifierVM(WorkoutElement element)
+        {
+            createCommands();
+            CurrElem = element;
+            if(CurrElem.IsTimeSpan())
+            {
+                var ts = (CurrElem as TimeSpanElement).ElemTimeSpan;
+                Hours = ts.Hours.ToString("D2");
+                Minutes = ts.Minutes.ToString("D2");
+                Seconds = ts.Seconds.ToString("D2");
+            }
+            else if(CurrElem.IsCounter())
+            {
+                Minutes = (CurrElem as CountedElement).ElemValue.ToString("D2");
+            }
+        }
+
+        void createCommands()
+        {
+            onNumberButton = new Command<string>((string value) =>
+            {
+                if(Int32.TryParse(value, out int newValue))
+                {
+                    if (Int32.TryParse(currTimeLabel?.Text, out int oldValue))
+                    {
+                        if (oldValue > 0 && oldValue < 10)
+                            newValue += oldValue *= 10;
+                        else if (oldValue > 9)
+                            newValue += oldValue % 10 * 10;
+                    }
+                    currTimeLabel.Text = newValue.ToString("D2");
+                    updateWorkoutElement();
+                }
+            });
+
+            onTimerTapped = new Command<Label>((Label selected) =>
+            {
+                currTimeLabel = selected;
+            });
+        }
+
+        void updateWorkoutElement()
+        {
+            if (CurrElem.IsTimeSpan())
+            {
+                TimeSpan ts = new TimeSpan(GetIntValue(Hours), GetIntValue(Minutes), GetIntValue(Seconds));
+                (CurrElem as TimeSpanElement).ElemTimeSpan = ts;
+            }
+            else if(CurrElem.IsCounter())
+            {
+                (CurrElem as CountedElement).ElemValue = GetIntValue(Minutes);
+            }
+        }
+
+        private Label currTimeLabel;
+
+        private string seconds = "00";
+        public string Seconds
+        {
+            get => seconds;
+            set { seconds = value; OnPropertyChanged(); }
+        }
+
+        private int GetIntValue(string val)
+        {
+            if (Int32.TryParse(val, out int result))
+                return result;
+            return 0;
+        }
+
+        private string minutes = "00";
+        public string Minutes
+        {
+            get => minutes;
+            set { minutes = value; OnPropertyChanged(); }
+        }
+
+        private string hours = "00";
+        public string Hours
+        {
+            get => hours;
+            set { hours = value; OnPropertyChanged(); }
+        }
+
+        WorkoutElement CurrElem { get; set; }
+
+        private Command<string> onNumberButton;
+        public Command<string> OnNumberButton { get => onNumberButton; }
+
+        private Command<Label> onTimerTapped;
+        public Command<Label> OnTimerTapped { get => onTimerTapped; }
     }
 }

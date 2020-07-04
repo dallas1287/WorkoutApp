@@ -6,7 +6,7 @@
              xmlns:local="clr-namespace:CustomTabata"
              mc:Ignorable="d"
              x:Class="CustomTabata.WorkoutBuilder">
-
+    
     <ContentPage.BindingContext>
         <local:WorkoutBuilderVM/>
     </ContentPage.BindingContext>
@@ -28,16 +28,17 @@
                     SelectedItem="{Binding PickerSelectedItem}">
             </Picker>
 
-            <CollectionView Grid.Row="1" Grid.ColumnSpan="2"
+            <CollectionView x:Name="collectionView"  Grid.Row="1" Grid.ColumnSpan="2"
                             BackgroundColor="Black"
-                            ItemsSource="{Binding WorkoutList}"
+                            ItemsSource="{Binding WorkoutCollection}"
                             SelectionMode="Single"
                             SelectedItem="{Binding SelectedWorkout}"
-                            SelectionChangedCommand="{Binding ModifyWorkoutCommand}">
+                            SelectionChangedCommand="{Binding ModifyWorkoutCommand}" SelectionChangedCommandParameter="{x:Reference collectionView}">
                 <CollectionView.ItemTemplate>
                     <DataTemplate>
                         <StackLayout>
-                            <Label Text="{Binding DisplayString}" FontSize="Title"/>
+                            <Label Text="{Binding DisplayString}" FontSize="Title">
+                            </Label>
                         </StackLayout>
                     </DataTemplate>
                 </CollectionView.ItemTemplate>

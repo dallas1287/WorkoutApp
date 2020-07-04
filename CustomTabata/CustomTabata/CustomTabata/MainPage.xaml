@@ -24,10 +24,17 @@
             <ColumnDefinition Width="*"/>
         </Grid.ColumnDefinitions>
 
+        <Label Grid.Column="0" Grid.Row="0" Grid.ColumnSpan="2"
+               VerticalTextAlignment="Center"
+               HorizontalTextAlignment="Center"
+               FontSize="48"
+               Text="{Binding CurrExerciseString}"/>
+
         <Label Grid.Column="0" Grid.Row="1" Grid.ColumnSpan="2"
                VerticalTextAlignment="Center"
                HorizontalTextAlignment="Center"
-               Text="{Binding StopwatchString}" BackgroundColor="Black" TextColor="Green" FontSize="48"/>
+               FontSize="48"
+               Text="{Binding StopwatchString}"/>
         
         <Button x:Name="startBtn" x:FieldModifier="public" Grid.Column="0" Grid.Row="2"  Command="{Binding StartCommand}" Text="Start"/>
         <Button Grid.Column="1" Grid.Row="2" Command="{Binding ResetCommand}" Text="Reset"/>

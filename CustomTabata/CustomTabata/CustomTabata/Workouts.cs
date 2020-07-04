@@ -1,6 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.Design;
 using System.Diagnostics.Tracing;
+using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Security;
 using System.Text;
 using Xamarin.Forms;
@@ -39,8 +43,86 @@ namespace CustomTabata
         };
     }
 
-    public abstract class WorkoutElement
+    public class Workout : INotifyPropertyChanged
     {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
+        public Workout()
+        {
+        }
+
+        public Workout(List<WorkoutElement> workouts)
+        {
+            WorkoutElements = workouts;
+        }
+
+        List<WorkoutElement> workoutElements;
+        public List<WorkoutElement> WorkoutElements
+        {
+            get => workoutElements;
+            set => workoutElements = value;
+        }
+
+        int ci = 0;
+        int m_currentIndex
+        { get => ci;
+            set
+            {
+                if (value >= workoutElements.Count() || value < 0)
+                    ci = 0;
+                else
+                    ci = value;
+            }
+        }
+
+        public WorkoutElement NextElement()
+        {
+            ++m_currentIndex;
+            return workoutElements[m_currentIndex];
+        }
+
+        public WorkoutElement PreviousElement()
+        {
+            --m_currentIndex;
+            return workoutElements[m_currentIndex];
+        }
+
+        WorkoutElement currElem;
+        public WorkoutElement CurrentElement 
+        { 
+            get => workoutElements[m_currentIndex];
+            set
+            {
+                currElem = value;
+                OnPropertyChanged();
+            }
+        }
+
+        public static readonly List<WorkoutElement> defaultWorkout = new List<WorkoutElement>()
+        {
+            new TimeSpanElement(ElementType.Countdown, new TimeSpan(0,0,3)),
+            new TimeSpanElement(ElementType.Warmup, new TimeSpan(0,0,30)),
+            new TimeSpanElement(ElementType.Exercise, new TimeSpan(0,0,20)),
+            new TimeSpanElement(ElementType.Rest, new TimeSpan(0,0,10)),
+            new CountedElement(ElementType.Sets, 4),
+            new TimeSpanElement(ElementType.Recovery, new TimeSpan(0,1,0)),
+            new CountedElement(ElementType.Cycles, 5),
+            new TimeSpanElement(ElementType.Cooldown, new TimeSpan(0,2,0))
+        };
+    }
+
+    public abstract class WorkoutElement : INotifyPropertyChanged
+    {
+        public event PropertyChangedEventHandler PropertyChanged;
+        protected virtual void OnPropertyChanged([CallerMemberName] string propertyName = null)
+        {
+            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+        }
+
         public WorkoutElement()
         {
         }
@@ -71,20 +153,43 @@ namespace CustomTabata
         {
             return IsValid() && ElemType > ElementType.TimeSpanMax;
         }
-        public string DisplayString { get; set; }
+
+        public static bool IsCounterType(ElementType type)
+        {
+            return (type > ElementType.TimeSpanMax && type < ElementType.Max);
+        }
+
+        public static bool IsTimeSpanType(ElementType type)
+        {
+            return type < ElementType.TimeSpanMax && type > ElementType.None;
+        }
+
+        protected string displayString;
+        public string DisplayString
+        {
+            get => displayString;
+            set
+            {
+                displayString = value;
+                OnPropertyChanged();
+            }
+        }
 
         protected string displayValue;
         public string DisplayValue { get => displayValue; }
+
+        protected string displayName;
+
+        public string DisplayName { get => displayName; }
     }
 
     public class CountedElement : WorkoutElement
     {
-        public CountedElement(ElementType type) 
+        public CountedElement(ElementType type, int value = 0, string name = null) 
         {
-            if (type > ElementType.TimeSpanMax && type < ElementType.Max)
-                elemType = type;
-            DisplayString = TypeString;
-            ElemValue = 0;
+            elemType = IsCounterType(type) ? type : ElementType.None;
+            displayName = String.IsNullOrEmpty(name) ? TypeString : name;
+            ElemValue = value;
         }
 
         int elemValue;
@@ -95,30 +200,29 @@ namespace CustomTabata
             {
                 elemValue = value;
                 displayValue = String.Format("{0:D2}", elemValue.ToString());
-                DisplayString += (" " + DisplayValue);
+                DisplayString = DisplayName + " " + DisplayValue;
             }
         }
     }
 
     public class TimeSpanElement : WorkoutElement
     {
-        public TimeSpanElement(ElementType type) 
+        public TimeSpanElement(ElementType type, TimeSpan? ts = null, string name = null) 
         {
-            if(type < ElementType.TimeSpanMax)
-                elemType = type;
-            DisplayString = TypeString;
-            ElemTimeSpan = TimeSpan.Zero;
+            elemType = IsTimeSpanType(type) ? type : ElementType.None;
+            displayName = TypeString;
+            ElemTimeSpan = (TimeSpan)(ts == null ? TimeSpan.Zero : ts);
         }
 
-        TimeSpan elemTimeSpan;
+        TimeSpan elemTimeSpan = TimeSpan.Zero;
         public TimeSpan ElemTimeSpan
         {
             get => elemTimeSpan;
             set
             {
                 elemTimeSpan = value;
-                displayValue = elemTimeSpan.ToString();
-                DisplayString += (" " + DisplayValue);
+                displayValue = elemTimeSpan.ToString(@"hh\:mm\:ss");
+                DisplayString = DisplayName + " " + DisplayValue;
             }
         }
     }

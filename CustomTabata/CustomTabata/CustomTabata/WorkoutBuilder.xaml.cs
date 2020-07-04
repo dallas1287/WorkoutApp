@@ -31,14 +31,24 @@ namespace CustomTabata
 
         public WorkoutBuilderVM()
         {
-            workoutList = new ObservableCollection<WorkoutElement>();
-            ModifyWorkoutCommand = new Command(async () =>
+            workoutCollection = new ObservableCollection<WorkoutElement>();
+            ModifyWorkoutCommand = new Command<CollectionView>(async (CollectionView selected) =>
             {
-                var workoutModifierVM = new WorkoutModifierVM();
-                var workoutModifierPage = new WorkoutModifier(SelectedWorkout);
-                workoutModifierPage.BindingContext = workoutModifierVM;
-                await Application.Current.MainPage.Navigation.PushAsync(workoutModifierPage);
+                if (selected.SelectedItem != null)
+                {
+                    var workoutModifierVM = new WorkoutModifierVM(selected.SelectedItem as WorkoutElement);
+                    var workoutModifierPage = new WorkoutModifier();
+                    workoutModifierPage.BindingContext = workoutModifierVM;
+                    MessagingCenter.Send<WorkoutBuilderVM, WorkoutElement>(this, "UpdateType", selected.SelectedItem as WorkoutElement);
+                    await Application.Current.MainPage.Navigation.PushAsync(workoutModifierPage);
+                }
+                selected.SelectedItem = null;
             });
+        }
+
+        public WorkoutBuilderVM(Workout currWorkout) : this()
+        {
+            workoutCollection = new ObservableCollection<WorkoutElement>(currWorkout.WorkoutElements);
         }
 
         string pickerSelectedItem;
@@ -57,9 +67,9 @@ namespace CustomTabata
             var key = TypeDictionary.typeStrings.FirstOrDefault(x => x.Value == selectedType).Key;
 
             if (key < ElementType.TimeSpanMax)
-                workoutList.Add(new TimeSpanElement(key));
+                workoutCollection.Add(new TimeSpanElement(key));
             else if (key > ElementType.TimeSpanMax && key < ElementType.Max)
-                workoutList.Add(new CountedElement(key));
+                workoutCollection.Add(new CountedElement(key));
         }
 
         private WorkoutElement selectedWorkout;
@@ -73,16 +83,16 @@ namespace CustomTabata
             }
         }
 
-        private ObservableCollection<WorkoutElement> workoutList;
-        public ObservableCollection<WorkoutElement> WorkoutList
+        private ObservableCollection<WorkoutElement> workoutCollection;
+        public ObservableCollection<WorkoutElement> WorkoutCollection
         {
-            get => workoutList;
+            get => workoutCollection;
 
             set
             {
-                if (workoutList != value)
+                if (workoutCollection != value)
                 {
-                    workoutList = value;
+                    workoutCollection = value;
                     OnPropertyChanged();
                 }
             }
@@ -93,6 +103,6 @@ namespace CustomTabata
             get => TypeDictionary.typeStrings.Values.ToList();
         }
 
-        public Command ModifyWorkoutCommand {get;}
+        public Command<CollectionView> ModifyWorkoutCommand {get;}
     }
 }
