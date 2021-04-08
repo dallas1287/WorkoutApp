@@ -7,6 +7,9 @@
              x:Class="CustomTabata.App">
     <Application.Resources>
         <ResourceDictionary>
+            <Style TargetType="NavigationPage">
+                <Setter Property="BarBackgroundColor" Value="Black"/>
+            </Style>
             <Style TargetType="Button">
                 <Setter Property="BackgroundColor" Value="Black"/>
                 <Setter Property="TextColor" Value="Green"/>
