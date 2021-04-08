@@ -1,0 +1,3 @@
+[submodule "PageantryDesigner"]
+	path = PageantryDesigner
+	url = git@github.com:dallas1287/PageantryDesigner.git

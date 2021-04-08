@@ -11,6 +11,11 @@
         <local:MainPageViewModel/>
     </ContentPage.BindingContext>
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem Text="Build Workout" Order="Primary" Priority="0" Command="{Binding BuildWorkoutCommand}"/>
+        <ToolbarItem Text="Load Workout" Order="Primary" Priority="1" Command="{Binding LoadWorkoutCommand}"/>
+    </ContentPage.ToolbarItems>
+
     <Grid BackgroundColor="Black">
         <Grid.RowDefinitions>
             <RowDefinition Height="*"/>
@@ -38,9 +43,6 @@
         
         <Button x:Name="startBtn" x:FieldModifier="public" Grid.Column="0" Grid.Row="2"  Command="{Binding StartCommand}" Text="Start"/>
         <Button Grid.Column="1" Grid.Row="2" Command="{Binding ResetCommand}" Text="Reset"/>
-        
-        <Button Grid.Column="0" Grid.Row="4" Command="{Binding BuildWorkoutCommand}" Text="Build Workout"/>
-        <Button Grid.Column="1" Grid.Row="4" Command="{Binding LoadWorkoutCommand}" Text="Load Workout"/>
     </Grid>
 
 </ContentPage>
